@@ -15,7 +15,8 @@
       "externs/topojson.js"
     ],
     "define": [
-      "ol.DEBUG=false"
+      "ol.DEBUG=false",
+      "ol.ENABLE_WEBGL=false"
     ],
     "jscomp_error": [
       "*"
