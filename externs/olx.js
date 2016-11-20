@@ -4962,6 +4962,43 @@ olx.source.TileDebugOptions.prototype.tileGrid;
  */
 olx.source.TileDebugOptions.prototype.wrapX;
 
+/**
+ * @typedef {{projection: ol.ProjectionLike,
+ *     tileGrid: (ol.tilegrid.TileGrid|undefined),
+ *     wrapX: (boolean|undefined)}}
+ */
+olx.source.TileOverlayOptions;
+
+
+/**
+ * Projection.
+ * @type {ol.ProjectionLike}
+ * @api
+ */
+olx.source.TileOverlayOptions.prototype.projection;
+
+
+/**
+ * Tile grid.
+ * @type {ol.tilegrid.TileGrid|undefined}
+ * @api
+ */
+olx.source.TileOverlayOptions.prototype.tileGrid;
+
+
+/**
+ * Whether to wrap the world horizontally. Default is `true`.
+ * @type {boolean|undefined}
+ * @api
+ */
+olx.source.TileOverlayOptions.prototype.wrapX;
+
+/**
+ * Color to use for the tile overlay image. Should be rgba
+ * @type {string}
+ * @api
+ */
+olx.source.TileOverlayOptions.prototype.color;
 
 /**
  * @typedef {{attributions: (ol.AttributionLike|undefined),
