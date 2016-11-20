@@ -10,14 +10,13 @@ goog.require('ol.source.Tile');
 /**
  * @classdesc
  * A pseudo tile source, which does not fetch tiles from a server, but renders
- * a grid outline for the tile grid/projection along with the coordinates for
- * each tile. See examples/canvas-tiles for an example.
+ * a colored canvas tile at each tile position.
  *
  * Uses Canvas context2d, so requires Canvas support.
  *
  * @constructor
  * @extends {ol.source.Tile}
- * @param {olx.source.TileOverlayOptions} options Debug tile options.
+ * @param {olx.source.TileOverlayOptions} options Overlay tile options.
  * @api
  */
 ol.source.TileOverlay = function(options) {
@@ -28,7 +27,8 @@ ol.source.TileOverlay = function(options) {
     tileGrid: options.tileGrid,
     wrapX: options.wrapX !== undefined ? options.wrapX : true
   });
-
+  
+  this.color = options.color;
 };
 ol.inherits(ol.source.TileOverlay, ol.source.Tile);
 
@@ -43,10 +43,7 @@ ol.source.TileOverlay.prototype.getTile = function(z, x, y) {
   } else {
     var tileSize = ol.size.toSize(this.tileGrid.getTileSize(z));
     var tileCoord = [z, x, y];
-    var textTileCoord = this.getTileCoordForTileUrlFunction(tileCoord);
-    var text = !textTileCoord ? '' :
-        this.getTileCoordForTileUrlFunction(textTileCoord).toString();
-    var tile = new ol.source.TileOverlay.Tile_(tileCoord, tileSize, text);
+    var tile = new ol.source.TileOverlay.Tile_(tileCoord, tileSize, this.color);
     this.tileCache.set(tileCoordKey, tile);
     return tile;
   }
@@ -58,10 +55,10 @@ ol.source.TileOverlay.prototype.getTile = function(z, x, y) {
  * @extends {ol.Tile}
  * @param {ol.TileCoord} tileCoord Tile coordinate.
  * @param {ol.Size} tileSize Tile size.
- * @param {string} text Text.
+ * @param {string} color color.
  * @private
  */
-ol.source.TileOverlay.Tile_ = function(tileCoord, tileSize, text) {
+ol.source.TileOverlay.Tile_ = function(tileCoord, tileSize, color) {
 
   ol.Tile.call(this, tileCoord, ol.Tile.State.LOADED);
 
@@ -73,15 +70,15 @@ ol.source.TileOverlay.Tile_ = function(tileCoord, tileSize, text) {
 
   /**
    * @private
-   * @type {string}
-   */
-  this.text_ = text;
-
-  /**
-   * @private
    * @type {HTMLCanvasElement}
    */
   this.canvas_ = null;
+
+ /**
+  * @private
+  * @type {string}
+  */ 
+  this.color = color;
 
 };
 ol.inherits(ol.source.TileOverlay.Tile_, ol.Tile);
@@ -98,7 +95,8 @@ ol.source.TileOverlay.Tile_.prototype.getImage = function() {
     var tileSize = this.tileSize_;
     var context = ol.dom.createCanvasContext2D(tileSize[0], tileSize[1]);
 
-    context.fillStyle = 'rgba(128, 128, 128, 0.5)';
+    context.fillStyle = this.color;
+    context.fillRect(0, 0, tileSize[0], tileSize[1]);
 
     this.canvas_ = context.canvas;
     return context.canvas;
