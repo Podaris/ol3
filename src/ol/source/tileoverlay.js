@@ -2,6 +2,7 @@ goog.provide('ol.source.TileOverlay');
 
 goog.require('ol');
 goog.require('ol.Tile');
+goog.require('ol.TileState');
 goog.require('ol.dom');
 goog.require('ol.size');
 goog.require('ol.source.Tile');
@@ -60,7 +61,7 @@ ol.source.TileOverlay.prototype.getTile = function(z, x, y) {
  */
 ol.source.TileOverlay.Tile_ = function(tileCoord, tileSize, color) {
 
-  ol.Tile.call(this, tileCoord, ol.Tile.State.LOADED);
+  ol.Tile.call(this, tileCoord, ol.TileState.LOADED);
 
   /**
    * @private
@@ -87,6 +88,7 @@ ol.inherits(ol.source.TileOverlay.Tile_, ol.Tile);
 /**
  * Get the image element for this tile.
  * @return {HTMLCanvasElement} Image.
+ * @override
  */
 ol.source.TileOverlay.Tile_.prototype.getImage = function() {
   if (this.canvas_) {
@@ -102,3 +104,8 @@ ol.source.TileOverlay.Tile_.prototype.getImage = function() {
     return context.canvas;
   }
 };
+
+/**
+ * @override
+ */
+ol.source.TileOverlay.Tile_.prototype.load = function() {};
